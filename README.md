@@ -1,4 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 # LQR
  Linear Quadratic Regulator and Iterative Learning
 
@@ -11,34 +10,24 @@
  Further, a stage-cost function is defined as $$ g : \mathcal{X} \times \mathcal{U} \times \mathcal{X} \rightarrow\mathcal{R}$$ together with a transition dynamic $$ f : \mathcal{X} \times \mathcal{U} \times \mathcal{W} \rightarrow \mathcal{X}$$ for a control action $$ u_t $$ in the state $$ x_t $$ with some disturbance $$ w_t $$, or often $$ w_{t+1} $$, since this last term is fully revealed at time $$ t+1$$.
 
  The goal is then to find an optimal (stationary) control policy $$ \pi :  \mathcal{X} \rightarrow \mathcal{U} $$.  A definition of a “stationary distribution”  can be found here in this post about [complex stuff with no bullshit](https://jeremykun.com/2015/04/06/markov-chain-monte-carlo-without-all-the-bullshit/), just to refresh some concepts. The optimal policy is expected to solve:
-
- $$
- \min \sum_{t=0}^{\infty} \gamma^t \mathbf{E}[g(x_t , u_t , x_{t+1})] \\  \text{s.t.} \; x_{t+1} = f(x_t , u_t , w_t), x_0 \sim \mathcal{D}
- $$
+ 
+![equation](http://www.sciweavers.org/tex2img.php?eq=%24%24%20%5Cmin%20%5Csum_%7Bt%3D0%7D%5E%7B%5Cinfty%7D%20%5Cgamma%5Et%20%5Cmathbf%7BE%7D%5Bg%28x_t%20%2C%20u_t%20%2C%20x_%7Bt%2B1%7D%29%5D%20%5C%20%5Ctext%7Bs.t.%7D%20%3B%20x_%7Bt%2B1%7D%20%3D%20f%28x_t%20%2C%20u_t%20%2C%20w_t%29%2C%20x_0%20%5Csim%20%5Cmathcal%7BD%7D%20%24%24&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
 
  Infinite horizon LQR is then a subclass of the previous problem, where the dynamic is linear and the stage-cost is quadratic. This case is particularly nice due to some interesting noise-related properties, but Ben Recht does an extremely clear example talking about [The Linear Quadratic Regulator](https://www.argmin.net/2018/02/08/lqr/).
  In the best scenario without any disturbance ( we will later discuss how the LQR behaves with some disturbances in the control or state axes), the system becomes
 
- $$
- \min \mathbf{E}[\sum_{t=0}^{\infty} x_t Q x_t^{T} + u_t R u_t^{T}] \\  \text{s.t.} \; x_{t+1} = A x_t+ B u_t,\\
- u_t = \pi (x_t), \: x_0 \sim \mathcal{D}
- $$
+![equation](http://www.sciweavers.org/tex2img.php?eq=%24%24%20%5Cmin%20%5Cmathbf%7BE%7D%5B%5Csum_%7Bt%3D0%7D%5E%7B%5Cinfty%7D%20x_t%20Q%20x_t%5E%7BT%7D%20%2B%20u_t%20R%20u_t%5E%7BT%7D%5D%20%5C%20%5Ctext%7Bs.t.%7D%20%3B%20x_%7Bt%2B1%7D%20%3D%20A%20x_t%2B%20B%20u_t%2C%5C%20u_t%20%3D%20%5Cpi%20%28x_t%29%2C%20%3A%20x_0%20%5Csim%20%5Cmathcal%7BD%7D%20%24%24&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
 
  where $$ A \in \mathcal{R}^{n \times n}$$, $$ B \in \mathcal{R}^{n \times m}$$, $$ Q \succeq 0 $$ and $$ R \succ 0 $$.
  In such case, the optimal control policy results to be a static state feedback and value function are known to be linear and convex quadratic on state respectively
 
- $$
- \pi^{\star} (x) = K x, \; V^{\star}(x) = x^{T}P x
- $$
+![equation](http://www.sciweavers.org/tex2img.php?eq=%20%24%24%0A%20%5Cpi%5E%7B%5Cstar%7D%20%28x%29%20%3D%20K%20x%2C%20%5C%3B%20V%5E%7B%5Cstar%7D%28x%29%20%3D%20x%5E%7BT%7DP%20x%0A%20%24%24&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
 
  where
 
- $$
 
- P = A^T P A + Q - A^T P B (B^T P B + R)^{-1} B^T P A, \\
- K = -(B^T P B + R)^{-1} B^T P A
+![equation](http://www.sciweavers.org/tex2img.php?eq=%20%24%24%0A%0A%20P%20%3D%20A%5ET%20P%20A%20%2B%20Q%20-%20A%5ET%20P%20B%20%28B%5ET%20P%20B%20%2B%20R%29%5E%7B-1%7D%20B%5ET%20P%20A%2C%20%5C%5C%0A%20K%20%3D%20-%28B%5ET%20P%20B%20%2B%20R%29%5E%7B-1%7D%20B%5ET%20P%20A%0A%0A%20%24%24&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
 
- $$
 
  The first is known as the discrete time Algebraic Riccati Equation (DARE). In case of $$(A, B)$$-controllability and $$(Q, A)$$-detectability, the solution is unique and can be efficiently computed via the Riccati recursion or other alternatives.
 
